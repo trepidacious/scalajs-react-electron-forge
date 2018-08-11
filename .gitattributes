@@ -1,0 +1,9 @@
+*.json text
+*.js text
+*.scala text
+*.sbt text
+*.html text
+*.jsx text
+*.md text
+
+
