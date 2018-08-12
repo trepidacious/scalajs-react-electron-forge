@@ -34,17 +34,24 @@ lazy val scalajsReactElectronForge = crossProject(JSPlatform, JVMPlatform).in(fi
   //Settings for all projects
   settings(
     name := "scalajs-react-electron-forge",
-  ).jsSettings(
+  )
+  .jsConfigure(_.enablePlugins(ScalaJSBundlerPlugin))
+  .jsSettings(
     //Scalajs dependencies that are used on the client only
     libraryDependencies ++= Seq(
       "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
       "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
     ),
     
+    npmDependencies in Compile ++= Seq(
+      "react" -> "16.4.2",
+      "react-dom" -> "16.4.2"
+    ),
+
     //Output scalajs and js dependencies to source folder for electron project
-    crossTarget in (Compile, fullOptJS) := scalaJsSrcDir,
-    crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
-    crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
+    // crossTarget in (Compile, fullOptJS) := scalaJsSrcDir,
+    // crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
+    // crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
 
     // This is an application with a main method
     scalaJSUseMainModuleInitializer := true
