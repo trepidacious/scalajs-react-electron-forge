@@ -52,7 +52,10 @@
   "dependencies": {
     "electron-compile": "^6.4.3",
     "electron-devtools-installer": "^2.2.4",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-hot-loader": "^4.3.4"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
