@@ -1,6 +1,6 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-name := "electron-forge-react root"
+name := "scalajs-react-electron-forge root"
 
 version in ThisBuild := "0.0.1"
 
@@ -24,16 +24,16 @@ val scalajsReactVersion = "1.2.3"
 val scalaJsSrcDir = file("../scalajs_src")
 
 lazy val root = project.in(file(".")).
-  aggregate(electronForgeReactJS, electronForgeReactJVM).
+  aggregate(scalajsReactElectronForgeJS, scalajsReactElectronForgeJVM).
   settings(
     publish := {},
     publishLocal := {}
   )
 
-lazy val electronForgeReact = crossProject(JSPlatform, JVMPlatform).in(file(".")).
+lazy val scalajsReactElectronForge = crossProject(JSPlatform, JVMPlatform).in(file(".")).
   //Settings for all projects
   settings(
-    name := "electron-forge-react",
+    name := "scalajs-react-electron-forge",
   ).jsSettings(
     //Scalajs dependencies that are used on the client only
     libraryDependencies ++= Seq(
@@ -50,6 +50,6 @@ lazy val electronForgeReact = crossProject(JSPlatform, JVMPlatform).in(file(".")
     scalaJSUseMainModuleInitializer := true
   )
 
-lazy val electronForgeReactJVM = electronForgeReact.jvm
-lazy val electronForgeReactJS = electronForgeReact.js
+lazy val scalajsReactElectronForgeJVM = scalajsReactElectronForge.jvm
+lazy val scalajsReactElectronForgeJS = scalajsReactElectronForge.js
 

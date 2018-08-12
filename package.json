@@ -1,8 +1,8 @@
 {
-  "name": "electron-forge-react",
-  "productName": "electron-forge-react",
+  "name": "scalajs-react-electron-forge",
+  "productName": "scalajs-react-electron-forge",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Template demonstrating use of scalajs-react to produce an Electron application with electron-forge.",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "trepidacious",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "config": {
     "forge": {
       "make_targets": {
@@ -35,7 +35,7 @@
         ]
       },
       "electronWinstallerConfig": {
-        "name": "electron_forge_react"
+        "name": "scalajs_react_electron_forge"
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
@@ -45,7 +45,7 @@
       },
       "windowsStoreConfig": {
         "packageName": "",
-        "name": "electronforgereact"
+        "name": "scalajsreactelectronforge"
       }
     }
   },
