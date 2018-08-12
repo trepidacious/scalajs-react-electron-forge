@@ -7,7 +7,7 @@
   <div id="App"></div>
 </body>
 
-<script type="text/jsx">
+<!-- <script type="text/jsx">
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
@@ -21,6 +21,11 @@ render();
 if (module.hot) {
   module.hot.accept(render);
 }
+</script> -->
+
+<script type="text/javascript">
+window.ReactDOM = require('react-dom');
+window.React    = require('react');
 </script>
 
 <script type="text/javascript" src="../scalajs_src/scalajs-react-electron-forge-fastopt.js"></script>
