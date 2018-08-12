@@ -21,6 +21,8 @@ scalacOptions in ThisBuild ++= Seq(
 
 val scalajsReactVersion = "1.2.3"
 
+val scalaJsSrcDir = file("../scalajs-src")
+
 lazy val root = project.in(file(".")).
   aggregate(electronForgeReactJS, electronForgeReactJVM).
   settings(
@@ -39,6 +41,11 @@ lazy val electronForgeReact = crossProject(JSPlatform, JVMPlatform).in(file(".")
       "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
     ),
     
+    //Output scalajs and js dependencies to source folder for electron project
+    crossTarget in (Compile, fullOptJS) := scalaJsSrcDir,
+    crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
+    crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
+
     // This is an application with a main method
     scalaJSUseMainModuleInitializer := true
   )

@@ -31,11 +31,7 @@
       "electronPackagerConfig": {
         "packageManager": "npm",
         "ignore": [
-          "js\\/target\\/scala.*\\/.*\\/.*",
-          "js\\/target\\/streams.*",
-          "js\\/src\\/.*",
-          "jvm\\/.*",
-          "project\\/.*"
+          "\\/scala_project_root"
         ]
       },
       "electronWinstallerConfig": {
