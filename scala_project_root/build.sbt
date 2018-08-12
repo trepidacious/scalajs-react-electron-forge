@@ -21,7 +21,7 @@ scalacOptions in ThisBuild ++= Seq(
 
 val scalajsReactVersion = "1.2.3"
 
-val scalaJsSrcDir = file("../scalajs-src")
+val scalaJsSrcDir = file("../scalajs_src")
 
 lazy val root = project.in(file(".")).
   aggregate(electronForgeReactJS, electronForgeReactJVM).
