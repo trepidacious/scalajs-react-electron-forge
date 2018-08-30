@@ -16,7 +16,19 @@ scalacOptions in ThisBuild ++= Seq(
   "-encoding", "UTF-8",
   "-unchecked",
   "-Xfatal-warnings",
-  "-Xlint"
+  "-Xlint",
+  "-Xcheckinit",
+  "-Xlint:-unused",
+  "-Ywarn-unused:imports",
+  "-Ypartial-unification",
+  "-language:existentials",
+  "-language:higherKinds",
+  "-Yno-adapted-args",
+  // "-Ywarn-dead-code",  //TODO restore for JVM and shared only
+  // "-Ywarn-numeric-widen",
+  "-Ywarn-value-discard",
+  "-Xfuture"
+  //"-Yno-predef" ?
 )
 
 val scalajsReactVersion = "1.2.3"
@@ -38,7 +50,11 @@ lazy val scalajsReactElectronForge = crossProject(JSPlatform, JVMPlatform).in(fi
     //Scalajs dependencies that are used on the client only
     libraryDependencies ++= Seq(
       "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
+      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
+
+      "org.rebeam"                  %%% "scalajs-react-material-ui"      % "0.0.1-SNAPSHOT",
+      "org.rebeam"                  %%% "scalajs-react-material-icons"   % "0.0.1-SNAPSHOT",
+      "org.rebeam"                  %%% "scalajs-react-downshift"        % "0.0.1-SNAPSHOT"
     ),
     
     //Output scalajs and js dependencies to source folder for electron project
@@ -46,8 +62,9 @@ lazy val scalajsReactElectronForge = crossProject(JSPlatform, JVMPlatform).in(fi
     crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
     crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
 
-    // This is an application with a main method
-    scalaJSUseMainModuleInitializer := true
+    //Produce a module, so we can use @JSImport.
+    // scalaJSModuleKind := ModuleKind.CommonJSModule//,
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
   )
 
 lazy val scalajsReactElectronForgeJVM = scalajsReactElectronForge.jvm

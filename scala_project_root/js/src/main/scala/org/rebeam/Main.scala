@@ -3,7 +3,10 @@ package org.rebeam
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom
+import scala.scalajs.js.annotation._
 
+
+@JSExportTopLevel("Main")
 object Main {
 
   val MainView =
@@ -11,8 +14,12 @@ object Main {
       .render_P(name => <.div("Hello ", name))
       .build
 
-  def main(args: Array[String]): Unit = {
+  @JSExport
+  def main(): Unit = {
     // Render the top-level view to the predefined HTML div with id "App"
-    MainView("World").renderIntoDOM(dom.document.getElementById("App"))
+    // MainView("World").renderIntoDOM(dom.document.getElementById("App"))
+    DownshiftDemo.ctor(DownshiftDemo.Props(DownshiftDemo.countries)).renderIntoDOM(dom.document.getElementById("App"))
+
+    ()
   }
 }
