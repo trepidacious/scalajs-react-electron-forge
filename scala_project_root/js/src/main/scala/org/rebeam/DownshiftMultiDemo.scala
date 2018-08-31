@@ -54,7 +54,8 @@ object DownshiftMultiDemo {
     "Brunei Darussalam"
   )
 
-  def getSuggestions(input: String, items: List[String]): List[String] = items.filter(_.toLowerCase.contains(input.toLowerCase)).take(5)
+  //TODO disiplay ellipsis when there are too many options?
+  def getSuggestions(input: String, items: List[String]): List[String] = items.filter(_.toLowerCase.contains(input.toLowerCase)).take(10)
 
   case class Props(items: List[String])
 
@@ -141,6 +142,8 @@ object DownshiftMultiDemo {
                 js.Dynamic.literal(
                   "placeholder" -> "Search for a country",
                   "startAdornment" -> chips,
+
+                  // We need to pass this in here or downshift will override it
                   "onKeyDown" -> handleKeyDown,
 
                   // Input should wrap, in case we have a lot of chips
@@ -148,6 +151,11 @@ object DownshiftMultiDemo {
                     "flexWrap" -> "wrap"
                   ),
 
+                  // This is passed through to the actual <input> used by the
+                  // textfield, we set the style so that the input is the same
+                  // size as the chips (so that the component doesn't change size
+                  // when adding the first chip), and has a better text alignment 
+                  // to chips.
                   "inputProps" -> js.Dynamic.literal(
                     "style" -> js.Dynamic.literal(
                       "paddingTop" -> "10px",
