@@ -9,7 +9,7 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.downshift.Downshift
 import org.rebeam.downshift.Downshift._
 
-object DownshiftDemo {
+object DownshiftFullyControlledDemo {
 
   val countries: List[String] = List (
     "Afghanistan",
@@ -52,7 +52,7 @@ object DownshiftDemo {
 
   case class Props(items: List[String])
 
-  case class State(selectedItem: Option[String])
+  case class State(selectedItem: Option[String], inputValue: String)
 
   class Backend(scope: BackendScope[Props, State]) {
 
@@ -87,8 +87,11 @@ object DownshiftDemo {
           selectedItem = state.selectedItem,
           onChange = (item: Option[String], c: RenderState[String]) => 
             Callback{println(s"onChange, item $item")} >> scope.modState(_.copy(selectedItem = item)),
-        )(
 
+          inputValue = state.inputValue,
+          onInputValueChange = (value: String, c: RenderState[String]) => 
+            Callback{println(s"onInputValueChange, value $value")} >> scope.modState(_.copy(inputValue = value))
+        )(
           (a: RenderState[String]) => {
 
             // Get properties for input from Downshift, providing
@@ -135,7 +138,7 @@ object DownshiftDemo {
 
   //Just make the component constructor - props to be supplied later to make a component
   def ctor = ScalaComponent.builder[Props]("DownshiftDemo")
-    .initialState(State(None))
+    .initialState(State(None, ""))
     .backend(new Backend(_))
     .render(s => s.backend.render(s.props, s.state))
     .build

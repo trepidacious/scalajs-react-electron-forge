@@ -18,7 +18,9 @@ object Main {
   def main(): Unit = {
     // Render the top-level view to the predefined HTML div with id "App"
     // MainView("World").renderIntoDOM(dom.document.getElementById("App"))
-    DownshiftDemo.ctor(DownshiftDemo.Props(DownshiftDemo.countries)).renderIntoDOM(dom.document.getElementById("App"))
+    // DownshiftDemo.ctor(DownshiftDemo.Props(DownshiftDemo.countries)).renderIntoDOM(dom.document.getElementById("App"))
+    DownshiftMultiDemo.ctor(DownshiftMultiDemo.Props(DownshiftDemo.countries)).renderIntoDOM(dom.document.getElementById("App"))
+    // TextFieldDemo.ctor().renderIntoDOM(dom.document.getElementById("App"))
 
     ()
   }

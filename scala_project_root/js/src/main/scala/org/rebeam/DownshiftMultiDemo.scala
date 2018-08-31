@@ -9,7 +9,7 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.downshift.Downshift
 import org.rebeam.downshift.Downshift._
 
-object DownshiftDemo {
+object DownshiftMultiDemo {
 
   val countries: List[String] = List (
     "Afghanistan",
@@ -52,7 +52,7 @@ object DownshiftDemo {
 
   case class Props(items: List[String])
 
-  case class State(selectedItem: Option[String])
+  case class State(selectedItems: List[String], inputValue: String)
 
   class Backend(scope: BackendScope[Props, State]) {
 
@@ -74,33 +74,64 @@ object DownshiftDemo {
       )(item)
     }
 
+    // On selection change, add item to selection, and clear input
+    private val handleChange = (item: Option[String], c: RenderState[String]) => 
+            Callback{println(s"onChange, item $item")} >> 
+            scope.modState(
+              s => s.copy(
+                selectedItems = item.map(i => if (s.selectedItems.contains(i)) s.selectedItems else s.selectedItems :+ i).getOrElse(s.selectedItems), 
+                inputValue = ""
+              )
+            )
+
+    // On input value change, update inputValue in state
+    private val handleInputValueChange = (value: String, c: RenderState[String]) => 
+            Callback{println(s"onInputValueChange, value $value")} >> scope.modState(_.copy(inputValue = value))
+
+    private def handleDelete(item: String): Callback = 
+      scope.modState(s => s.copy(selectedItems = s.selectedItems.filter(_ != item)))
+
     //TODO
     // 1. mui Styles
-    // 2. Multi-selection demo with chips
-
     def render(props: Props, state: State) = {
 
       <.div(
         Downshift[String](
           itemToString = (i: String) => i.toString,
-
-          selectedItem = state.selectedItem,
-          onChange = (item: Option[String], c: RenderState[String]) => 
-            Callback{println(s"onChange, item $item")} >> scope.modState(_.copy(selectedItem = item)),
+          onChange = handleChange,
+          inputValue = state.inputValue,
+          onInputValueChange = handleInputValueChange,
+          selectedItem = None            
         )(
 
           (a: RenderState[String]) => {
+
+            // val chips = <.span(state.selectedItems.mkString(", "): String).rawNode.asInstanceOf[js.Any]
+
+            //Chips to display current selected items
+            val chips = state.selectedItems.toVdomArray(
+              item => (
+                mui.Chip(
+                  key = item,
+                  tabIndex = -1: js.Any,
+                  label = item: VdomNode,
+                  // className={classes.chip}
+                  onDelete = handleDelete(item)
+                )
+              )
+            ).rawNode.asInstanceOf[js.Any]  //TODO why do we need to cast this? Otherwise leads to diverging implicit expansion for type scala.scalajs.js.|.Evidence[A1,Short] when trying to set in literal below
 
             // Get properties for input from Downshift, providing
             // our desired properties as a JS object
             val inputProps = 
               a.getInputProps(
                 js.Dynamic.literal(
-                  placeholder = "Search for a country"
+                  "placeholder" -> "Search for a country",
+                  "startAdornment" -> chips
                 )
               )
 
-            js.Dynamic.global.console.log(inputProps)
+            // js.Dynamic.global.console.log(inputProps)
 
             <.div(
 
@@ -126,7 +157,7 @@ object DownshiftDemo {
           }
         ),
 
-        <.span(state.selectedItem.getOrElse("No selection"): String)
+        <.span(state.selectedItems.mkString(", "): String)
       )
 
     }
@@ -135,7 +166,7 @@ object DownshiftDemo {
 
   //Just make the component constructor - props to be supplied later to make a component
   def ctor = ScalaComponent.builder[Props]("DownshiftDemo")
-    .initialState(State(None))
+    .initialState(State(Nil, ""))
     .backend(new Backend(_))
     .render(s => s.backend.render(s.props, s.state))
     .build
