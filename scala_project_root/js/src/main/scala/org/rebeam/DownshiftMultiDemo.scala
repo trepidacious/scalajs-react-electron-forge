@@ -104,6 +104,9 @@ object DownshiftMultiDemo {
     def render(props: Props, state: State) = {
 
       <.div(
+        ^.flexGrow := "1",
+        ^.position := "relative",
+
         Downshift[String](
           itemToString = (i: String) => i.toString,
           onChange = handleChange,
@@ -123,7 +126,10 @@ object DownshiftMultiDemo {
                   tabIndex = -1: js.Any,
                   label = item: VdomNode,
                   // className={classes.chip}
-                  onDelete = handleDelete(item)
+                  onDelete = handleDelete(item),
+                  style = mui.styles.Style(
+                    "margin" -> "3px 6px 3px 0px"
+                  )
                 )
               )
             ).rawNode.asInstanceOf[js.Any]  //TODO why do we need to cast this? Otherwise leads to diverging implicit expansion for type scala.scalajs.js.|.Evidence[A1,Short] when trying to set in literal below
@@ -135,7 +141,19 @@ object DownshiftMultiDemo {
                 js.Dynamic.literal(
                   "placeholder" -> "Search for a country",
                   "startAdornment" -> chips,
-                  "onKeyDown" -> handleKeyDown
+                  "onKeyDown" -> handleKeyDown,
+
+                  // Input should wrap, in case we have a lot of chips
+                  "style" -> js.Dynamic.literal(
+                    "flexWrap" -> "wrap"
+                  ),
+
+                  "inputProps" -> js.Dynamic.literal(
+                    "style" -> js.Dynamic.literal(
+                      "paddingTop" -> "10px",
+                      "paddingBottom" -> "12px",
+                    ),
+                  ),
                 )
               )
 
@@ -146,7 +164,16 @@ object DownshiftMultiDemo {
                 InputProps = inputProps
               ),
 
-              mui.Paper(square = true)(
+              mui.Paper(
+                square = true,
+                style = mui.styles.Style(
+                  "position" -> "absolute",
+                  "zIndex" -> "1",
+                  "marginTop" -> "4px",
+                  "left" -> "0",
+                  "right" -> "0"
+                )
+              )(
                 getSuggestions(a.inputValue, props.items.filter(i => !state.selectedItems.contains(i))).zipWithIndex.map{
                   case (item, index) => renderItem(
                     item, 
@@ -161,10 +188,10 @@ object DownshiftMultiDemo {
             )
 
           }
-        ),
+        )
 
-        <.span(state.selectedItems.mkString(", "): String)
       )
+      
 
     }
 
