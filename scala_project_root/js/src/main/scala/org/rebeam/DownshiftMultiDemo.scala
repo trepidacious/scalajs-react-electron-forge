@@ -9,6 +9,12 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.downshift.Downshift
 import org.rebeam.downshift.Downshift._
 
+/**
+  * This replicates the downshift multiple selection demo from the material-ui examples,
+  * it involves some raw javascript values and functions because it uses the startAdornment
+  * property of an Input, via a TextField. It would probably be easier to use a similar
+  * approach with a separate container for the chips - this would also flow better.
+  */
 object DownshiftMultiDemo {
 
   val countries: List[String] = List (
@@ -61,35 +67,37 @@ object DownshiftMultiDemo {
         key = item,
         selected = highlightedIndex.contains(index),
         component = "div": js.Any,
-
         // Downshift has provided us with an object containing props to make autocompletion work.
         // We can pass these to additionalProps, and they will be applied as props of the underlying
         // material-ui MenuItem
-        additionalProps = itemProps,
-
-        // Additional style for selection
-        style = mui.styles.Style(
-          "fontWeight" -> (if (selectedItem.contains(item)) "500" else "400")
-        )
+        additionalProps = itemProps
       )(item)
     }
 
     // On selection change, add item to selection, and clear input
     private val handleChange = (item: Option[String], c: RenderState[String]) => 
-            Callback{println(s"onChange, item $item")} >> 
-            scope.modState(
-              s => s.copy(
-                selectedItems = item.map(i => if (s.selectedItems.contains(i)) s.selectedItems else s.selectedItems :+ i).getOrElse(s.selectedItems), 
-                inputValue = ""
-              )
-            )
+      scope.modState(
+        s => s.copy(
+          selectedItems = item.map(i => if (s.selectedItems.contains(i)) s.selectedItems else s.selectedItems :+ i).getOrElse(s.selectedItems), 
+          inputValue = ""
+        )
+      )
 
     // On input value change, update inputValue in state
-    private val handleInputValueChange = (value: String, c: RenderState[String]) => 
-            Callback{println(s"onInputValueChange, value $value")} >> scope.modState(_.copy(inputValue = value))
+    private val handleInputValueChange = (value: String, c: RenderState[String]) => scope.modState(_.copy(inputValue = value))
 
+    // On clicking delete in a chip, remove the corresponding item from selection
     private def handleDelete(item: String): Callback = 
       scope.modState(s => s.copy(selectedItems = s.selectedItems.filter(_ != item)))
+
+    //Provided directly to JS props, so needs to be a js function that runs immediately
+    private val handleKeyDown: js.Function1[ReactKeyboardEvent, Unit] = (e: ReactKeyboardEvent) => {
+      if (e.key.toLowerCase == "backspace") {
+        scope.modState(s => s.copy(selectedItems = if (s.inputValue.isEmpty) s.selectedItems.dropRight(1) else s.selectedItems))
+      } else {
+        Callback.empty
+      }
+    }.runNow
 
     //TODO
     // 1. mui Styles
@@ -106,9 +114,8 @@ object DownshiftMultiDemo {
 
           (a: RenderState[String]) => {
 
-            // val chips = <.span(state.selectedItems.mkString(", "): String).rawNode.asInstanceOf[js.Any]
-
             //Chips to display current selected items
+            //Provided to a js object, so needs to be a raw node
             val chips = state.selectedItems.toVdomArray(
               item => (
                 mui.Chip(
@@ -127,11 +134,10 @@ object DownshiftMultiDemo {
               a.getInputProps(
                 js.Dynamic.literal(
                   "placeholder" -> "Search for a country",
-                  "startAdornment" -> chips
+                  "startAdornment" -> chips,
+                  "onKeyDown" -> handleKeyDown
                 )
               )
-
-            // js.Dynamic.global.console.log(inputProps)
 
             <.div(
 
@@ -141,7 +147,7 @@ object DownshiftMultiDemo {
               ),
 
               mui.Paper(square = true)(
-                getSuggestions(a.inputValue, props.items).zipWithIndex.map{
+                getSuggestions(a.inputValue, props.items.filter(i => !state.selectedItems.contains(i))).zipWithIndex.map{
                   case (item, index) => renderItem(
                     item, 
                     index,
