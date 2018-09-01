@@ -82,7 +82,10 @@ object DownshiftMultiDemo {
           selectedItems = item.map(i => if (s.selectedItems.contains(i)) s.selectedItems else s.selectedItems :+ i).getOrElse(s.selectedItems), 
           inputValue = ""
         )
-      )
+      ) >> Callback {
+        c.openMenu()
+        c.setHighlightedIndex(0)
+      }
 
     // On input value change, update inputValue in state
     private val handleInputValueChange = (value: String, c: RenderState[String]) => scope.modState(_.copy(inputValue = value))
@@ -135,6 +138,12 @@ object DownshiftMultiDemo {
               )
             ).rawNode.asInstanceOf[js.Any]  //TODO why do we need to cast this? Otherwise leads to diverging implicit expansion for type scala.scalajs.js.|.Evidence[A1,Short] when trying to set in literal below
 
+            val openAndHighlightFirst: js.Function0[Unit] = () => {
+              a.openMenu()
+              a.setHighlightedIndex(0)
+            }
+
+
             // Get properties for input from Downshift, providing
             // our desired properties as a JS object
             val inputProps = 
@@ -145,6 +154,8 @@ object DownshiftMultiDemo {
 
                   // We need to pass this in here or downshift will override it
                   "onKeyDown" -> handleKeyDown,
+
+                  "onFocus" -> openAndHighlightFirst,
 
                   // Input should wrap, in case we have a lot of chips
                   "style" -> js.Dynamic.literal(
