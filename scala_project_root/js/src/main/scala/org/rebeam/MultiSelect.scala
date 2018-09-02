@@ -17,7 +17,9 @@ object MultiSelect {
     onSelectionChange: List[A] => Callback,
     itemToString: A => String = (a: A) => a.toString, 
     itemToKey: (A, Int) => String = (_: A, i: Int) => i.toString,
-    maxMenuItems: Int = 5
+    maxMenuItems: Int = 5,
+    nothingFound: String = "Nothing found...",
+    moreAvailable: String = "More items match..."
   )
 
   case class State(inputValue: String)
@@ -142,14 +144,24 @@ object MultiSelect {
                 )
             }
 
-            val menuContents = if (overflow) {
+            val menuContents = if (menuItems.isEmpty){
+              List[VdomElement](
+                mui.MenuItem(
+                  key = "org.rebeam.MultiSelect.ellipsis",
+                  selected = false,
+                  component = "div": js.Any,
+                  disabled = true,
+                  button = false
+                )(props.nothingFound)
+              )
+            } else if (overflow) {
               menuItems :+ (mui.MenuItem(
                 key = "org.rebeam.MultiSelect.ellipsis",
                 selected = false,
                 component = "div": js.Any,
                 disabled = true,
                 button = false
-              )("..."): VdomElement)
+              )(props.moreAvailable): VdomElement)
             } else {
               menuItems
             }
