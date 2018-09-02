@@ -225,7 +225,16 @@ object MultiSelect {
     }
   }
 
-  //Just make the component constructor - props to be supplied later to make a component
+  /**
+   * Note this is a def - the component has a type parameter, so we need to
+   * construct an instance per type. It's recommended to do this once and
+   * store the resulting component as a val, e.g. 
+   * ```scala
+   * val MultiSelectString = MultiSelect.component[String]
+   * ```
+   * Otherwise, a new component will be created each time this is called, and
+   * this will trigger a remount of the component and loss of state, etc.
+   */
   def component[A] = ScalaComponent.builder[Props[A]]("DownshiftDemo")
     .initialState(State(""))
     .backend(new Backend[A](_))
