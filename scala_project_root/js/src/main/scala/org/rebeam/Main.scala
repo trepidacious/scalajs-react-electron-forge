@@ -19,7 +19,8 @@ object Main {
     // Render the top-level view to the predefined HTML div with id "App"
     <.div(
       ^.margin := "20px",
-      DownshiftMultiDemo.ctor(DownshiftMultiDemo.Props(DownshiftDemo.countries))
+      MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries))
+    // DownshiftMultiDemo.ctor(DownshiftMultiDemo.Props(DownshiftDemo.countries))
     // MainView("World").renderIntoDOM(dom.document.getElementById("App"))
     // DownshiftDemo.ctor(DownshiftDemo.Props(DownshiftDemo.countries)).renderIntoDOM(dom.document.getElementById("App"))
     // TextFieldDemo.ctor().renderIntoDOM(dom.document.getElementById("App"))

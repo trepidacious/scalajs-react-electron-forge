@@ -217,7 +217,7 @@ object DownshiftMultiDemo {
   }
 
   //Just make the component constructor - props to be supplied later to make a component
-  def ctor = ScalaComponent.builder[Props]("DownshiftDemo")
+  val ctor = ScalaComponent.builder[Props]("DownshiftDemo")
     .initialState(State(Nil, ""))
     .backend(new Backend(_))
     .render(s => s.backend.render(s.props, s.state))
