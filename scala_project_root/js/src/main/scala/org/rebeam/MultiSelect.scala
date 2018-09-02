@@ -9,8 +9,33 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.downshift.Downshift
 import org.rebeam.downshift.Downshift._
 
+/**
+ * Uses Downshift and material-ui components to build an autocompleting
+ * multiple selection component.
+ */
 object MultiSelect {
 
+  /**
+    * Properties for MultiSelect
+    * @param items  The items available for selection (can include already 
+    *               selected items, these will not be displayed for reselection)
+    * @param selectedItems  The currently selected items. Do not need to be in items,
+    *                       if you want to remove selectedItems that are not in items
+    *                       you need to do this yourself.
+    * @param onSelectionChange  Will be called when selection changes, with the new
+    *                           selection list. Generally you will update state in
+    *                           a parent component, causing a render with new selectedItems.
+    * @param itemToString Function to display an item as a string, as edited in the input
+    *                     and displayed in chips. Defaults to toString.
+    * @param itemToKey  Function to produce a key for an item in a list of items - also
+    *                   provided with the index in the list - this defaults to just using 
+    *                   the index.
+    * @param maxMenuItems Maximum number of items to display in the menu. If additional
+    *                     matching items exist an ellipsis will be displayed to indicate this.
+    * @param nothingFound String to display in menu if no items are found for current input value
+    * @param moreAvailable  String to display in menu after last displayed item, if more items 
+    *                       match current input 
+    */
   case class Props[A](
     items: List[A], 
     selectedItems: List[A], 
@@ -240,33 +265,5 @@ object MultiSelect {
     .backend(new Backend[A](_))
     .render(s => s.backend.render(s.props, s.state))
     .build
-
-  // /**
-  //   * Create a MultiSelect
-  //   * @param items  The items available for selection (can include already 
-  //   *               selected items, these will not be displayed for reselection)
-  //   * @param selectedItems  The currently selected items. Do not need to be in items,
-  //   *                       if you want to remove selectedItems that are not in items
-  //   *                       you need to do this yourself.
-  //   * @param onSelectionChange  Will be called when selection changes, with the new
-  //   *                           selection list. Generally you will update state in
-  //   *                           a parent component, causing a render with new selectedItems.
-  //   * @param itemToString Function to display an item as a string, as edited in the input
-  //   *                     and displayed in chips. Defaults to toString.
-  //   * @param itemToKey  Function to produce a key for an item in a list of items - also
-  //   *                   provided with the index in the list - this defaults to just using 
-  //   *                   the index.
-  //   * @param maxMenuItems Maximum number of items to display in the menu. If additional
-  //   *                     matching items exist an ellipsis will be displayed to indicate this.
-  //   * @return A MultiSelect component
-  //   */
-  // def apply[A](
-  //   items: List[A], 
-  //   selectedItems: List[A], 
-  //   onSelectionChange: List[A] => Callback,
-  //   itemToString: A => String = (a: A) => a.toString, 
-  //   itemToKey: (A, Int) => String = (_: A, i: Int) => i.toString,
-  //   maxMenuItems: Int = 5
-  // ) = component[A](Props(items, selectedItems, onSelectionChange, itemToString, itemToKey, maxMenuItems))
 
 }
