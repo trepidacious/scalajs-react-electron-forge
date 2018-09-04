@@ -52,9 +52,10 @@ lazy val scalajsReactElectronForge = crossProject(JSPlatform, JVMPlatform).in(fi
       "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
       "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
 
-      "org.rebeam"                  %%% "scalajs-react-material-ui"      % "0.0.1-SNAPSHOT",
-      "org.rebeam"                  %%% "scalajs-react-material-icons"   % "0.0.1-SNAPSHOT",
-      "org.rebeam"                  %%% "scalajs-react-downshift"        % "0.0.1-SNAPSHOT"
+      "org.rebeam"                  %%% "scalajs-react-material-ui"         % "0.0.1-SNAPSHOT",
+      "org.rebeam"                  %%% "scalajs-react-material-icons"      % "0.0.1-SNAPSHOT",
+      "org.rebeam"                  %%% "scalajs-react-downshift"           % "0.0.1-SNAPSHOT",
+      "org.rebeam"                  %%% "scalajs-react-material-ui-extra"   % "0.0.1-SNAPSHOT"
     ),
     
     //Output scalajs and js dependencies to source folder for electron project
