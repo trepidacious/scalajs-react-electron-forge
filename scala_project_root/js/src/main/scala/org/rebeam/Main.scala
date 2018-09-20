@@ -22,7 +22,7 @@ object Main {
     val theme = mui.styles.Styles.createMuiTheme(
       js.Dynamic.literal(
         "palette" -> js.Dynamic.literal(
-          "type" -> "dark"
+          // "type" -> "dark"
         )
       )
     )
